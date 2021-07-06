@@ -4,8 +4,6 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Directory;
-// use \RecursiveIteratorIterator;
-// use \RecursiveDirectoryIterator;
 use File;
 
 class Directories extends Component
@@ -35,7 +33,15 @@ class Directories extends Component
             }
         }
         $this->alert = null;
-        $this->emit('directoriesSynced');
+    }
+
+    public function syncImages($directory_id) {
+        $directory = Directory::find($directory_id);
+        $this->alert = 'Syncing pictures in ' . $directory->displayPath();
+
+        $directory->syncPictures();
+
+        $this->alert = null;
     }
 
     protected function syncSubDirectories($dir_path, $parent_id = null) {

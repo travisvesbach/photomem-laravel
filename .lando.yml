@@ -7,6 +7,8 @@ services:
     type: node:12
     build:
       - npm install
+    run_as_root:
+      - apt-get install imagemagick
 tooling:
   npm:
     service: node

@@ -174,7 +174,7 @@ code {
     border-radius: 1rem;
     padding: 1rem;
     font-weight: bold;
-    display: flex;
+    display: none;
 }
 
 .alert-normal {
