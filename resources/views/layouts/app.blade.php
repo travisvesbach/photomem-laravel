@@ -15,8 +15,6 @@
 
         <!-- Prevent search engines from listing/ranking the site -->
         <meta name="robots" content="noindex,nofollow">
-
-        @livewireStyles
     </head>
     <body>
         <header>
@@ -37,7 +35,5 @@
         <div class="main-content">
             @yield('content')
         </div>
-
-        @livewireScripts
     </body>
 </html>
