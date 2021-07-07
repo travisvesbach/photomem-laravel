@@ -18,4 +18,6 @@ Route::view('/', 'index');
 Route::view('/about', 'about')->name('about');
 
 Route::get('/directories', [DirectoriesController::class, 'index'])->name('directories');
-Route::get('/directories/sync', [DirectoriesController::class, 'syncDirectories'])->name('directories.syncDirectories');
+Route::post('/directories/sync', [DirectoriesController::class, 'syncDirectories'])->name('directories.syncDirectories');
+Route::post('/directories/{directory}/sync', [DirectoriesController::class, 'sync'])->name('directories.sync');
+Route::get('/directories/sync_status', [DirectoriesController::class, 'syncStatus'])->name('directories.syncStatus');

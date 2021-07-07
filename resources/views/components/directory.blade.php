@@ -17,8 +17,7 @@
 
         <button
             class="button ignored-hidden"
-            {{-- onclick="runSync('<%= Web.routes.path(:directorySyncImages, id: directory.id) %>')" --}}
-            wire:click.prevent="syncImages({{ $directory->id }})"
+            onclick="runSync('{{ route('directories.sync', ['directory' => $directory]) }}')"
             title="syncs pictures in this directory and non-ignored child directories"
             style="display: {{ $directory->status == 'ignored' ? 'none' : 'block' }};">
                 {{ $directory->status == 'synced' ? 'Resync' : 'Sync' }}
@@ -26,7 +25,7 @@
 
         <button
             class="button button-danger ignored-hidden"
-            {{-- onclick="ignoreDirectory('<%= Web.routes.path(:directoryUpdate, id: directory.id) %>' )" --}}
+            onclick="ignoreDirectory('<%= Web.routes.path(:directoryUpdate, id: directory.id) %>' )"
             title="removes all pictures from this directory and all child directories"
             style="display: {{ $directory->status == 'ignored' ? 'none' : 'block' }};">
                 Ignore
@@ -34,7 +33,7 @@
 
         <button
             class="button ignored-show"
-            {{-- onclick="runSync('<%= Web.routes.path(:directorySyncImages, id: directory.id) %>')" --}}
+            onclick="runSync('{{ route('directories.sync', ['directory' => $directory]) }}')"
             title="unignore this directory and ignored parent directories"
             style="display: {{ $directory->status == 'ignored' ? 'block' : 'none' }};">
                 Sync

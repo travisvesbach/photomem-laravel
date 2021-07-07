@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Picture;
 use File;
 use Image;
+use App\Jobs\SyncPictures;
 
 class Directory extends Model
 {
@@ -47,7 +48,8 @@ class Directory extends Model
         return $this->hasMany(Picture::class);
     }
 
-    public function setTotalPictureCount() {
+    public function setPictureCounts() {
+        $this->picture_count = $this->pictures->count();
         $count = $this->picture_count;
         foreach($this->directories as $directory) {
             $count += $directory->picture_count;
@@ -68,13 +70,18 @@ class Directory extends Model
         }
     }
 
+    public function absolutePath() {
+        return '/app/public' . substr($this->path, 1);
+    }
+
+    // syncs pictures in self and non-ignored subdirectories
     public function syncPictures() {
         $this->status = 'unsynced';
         $this->save();
         $this->deleteNonexistantPictures();
 
         $picture_array = [];
-        foreach (glob($this->path."/*.{jpg,png,jpeg,JPG,PNG,JPEG}", GLOB_BRACE) as $filename) {
+        foreach (glob($this->absolutePath()."/*.{jpg,png,jpeg,JPG,PNG,JPEG}", GLOB_BRACE) as $filename) {
             $arr = explode('/', $filename);
             $name = end($arr);
 
@@ -116,7 +123,38 @@ class Directory extends Model
 
         $this->refresh();
         $this->status = 'synced';
-        $this->picture_count = $this->pictures->count();
         $this->save();
+        $this->setPictureCounts();
+    }
+
+    public function addSyncPicturesJob() {
+        if($this->status != 'ignored') {
+            SyncPictures::dispatch($this);
+
+            foreach($this->directories as $directory) {
+                $directory->addSyncPicturesJob();
+            }
+        }
+    }
+
+    public static function syncSubDirectories($dir_path, $parent_id = null) {
+        $directories = array_filter(glob($dir_path), 'is_dir');
+        foreach($directories as $directory) {
+            $directory_obj = self::firstOrCreate(
+                ['path' => $directory],
+                ['directory_id' => $parent_id]
+            );
+
+            self::syncSubDirectories($directory.'/*', $directory_obj->id);
+        }
+    }
+
+    // remove nonexistent directories
+    public static function deleteNonexistant() {
+        foreach(self::all() as $directory) {
+            if(!File::exists($directory->path)) {
+                $directory->delete();
+            }
+        }
     }
 }
