@@ -12,10 +12,11 @@ class Picture extends Model
     }
 
     public function path() {
-        return str_replace(
-            [' ', '\''],
-            ['\ ', '\\\''],
-            $this->directory->path . '/' . $this->name
-        );
+        return $this->directory->path . '/' . $this->name;
+        // return str_replace(
+        //     [' ', '\''],
+        //     ['\ ', '\\\''],
+        //     $this->directory->absolutePath() . '/' . $this->name
+        // );
     }
 }

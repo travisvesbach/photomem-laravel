@@ -41,7 +41,7 @@ class Directory extends Model
     }
 
     public function displayPath() {
-        return explode('./storage/sync/', $this->path)[1];
+        return explode(env('SYNC_DIRECTORY'), $this->path)[1];
     }
 
     public function pictures() {
@@ -52,26 +52,26 @@ class Directory extends Model
         $this->picture_count = $this->pictures->count();
         $count = $this->picture_count;
         foreach($this->directories as $directory) {
-            $count += $directory->picture_count;
+            $count += $directory->total_picture_count;
         }
         $this->total_picture_count = $count;
         $this->save();
     }
 
     public function deletePictures() {
-        $this->pictures->delete();
+        $this->pictures()->delete();
     }
 
     public function deleteNonexistantPictures() {
         foreach($this->pictures as $picture) {
-            if(!File::exists($this->path)) {
+            if(!File::exists($picture->path())) {
                 $picture->delete();
             }
         }
     }
 
     public function absolutePath() {
-        return '/app/public' . substr($this->path, 1);
+        return env('PUBLIC_DIRECTORY') . substr($this->path, 1);
     }
 
     // syncs pictures in self and non-ignored subdirectories
@@ -81,7 +81,7 @@ class Directory extends Model
         $this->deleteNonexistantPictures();
 
         $picture_array = [];
-        foreach (glob($this->absolutePath()."/*.{jpg,png,jpeg,JPG,PNG,JPEG}", GLOB_BRACE) as $filename) {
+        foreach (glob($this->path . "/*.{jpg,png,jpeg,JPG,PNG,JPEG}", GLOB_BRACE) as $filename) {
             $arr = explode('/', $filename);
             $name = end($arr);
 
@@ -134,6 +134,19 @@ class Directory extends Model
             foreach($this->directories as $directory) {
                 $directory->addSyncPicturesJob();
             }
+        }
+    }
+
+    // set self and child directories' status to 'ignored'
+    public function ignore() {
+        $this->deletePictures();
+        $this->status = 'ignored';
+        $this->picture_count = 0;
+        $this->total_picture_count = 0;
+        $this->save();
+
+        foreach ($this->directories as $child) {
+            $child->ignore();
         }
     }
 

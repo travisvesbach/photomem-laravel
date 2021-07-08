@@ -19,15 +19,33 @@ class DirectoriesController extends Controller
             'directories' => $directories,
             'synced' => $directories->where('status', 'synced')->count(),
             'ignored' => $directories->where('status', 'ignored')->count(),
+            'picture_count' => Picture::all()->count(),
+        ]);
+    }
+
+    public function update(Directory $directory, Request $request) {
+        if($request->input('status') == 'true') {
+            $directory->ignore();
+            foreach($directory->getParentDirectories() as $parent) {
+                $parent->setPictureCounts();
+            }
+        }
+
+        return json_encode([
+            'directories' => Directory::orderBy('path')->get(),
+            'picture_count' => Picture::all()->count(),
         ]);
     }
 
     public function sync(Directory $directory) {
-        // when syncing an ignored directory, ingored parents marked as unsynced
+        // when syncing an ignored directory, ignored parents marked as unsynced
         if($directory->status == 'ignored') {
+            $directory->status = 'unsynced';
             foreach($directory->getParentDirectories() as $parent) {
-                $parent->status = 'unsynced';
-                $parent->save();
+                if($parent->status == 'ignored') {
+                    $parent->status = 'unsynced';
+                    $parent->save();
+                }
             }
         }
 
@@ -44,7 +62,7 @@ class DirectoriesController extends Controller
 
     public function syncDirectories() {
         Directory::deleteNonexistant();
-        Directory::syncSubDirectories('./storage/sync/*');
+        Directory::syncSubDirectories(env('SYNC_DIRECTORY').'*');
         return json_encode(['directories' => Directory::orderBy('path')->get()]);
     }
 
@@ -53,12 +71,14 @@ class DirectoriesController extends Controller
         $current = null;
         if(Queue::size() > 0) {
             $status = 'syncing';
-            $current = str_replace('./storage/sync/', '', unserialize(json_decode(DB::table('jobs')->first()->payload)->data->command)->directory->path);
+            $current = str_replace(env('SYNC_DIRECTORY'), '', unserialize(json_decode(DB::table('jobs')->first()->payload)->data->command)->directory->path);
         }
         return json_encode([
             'status' => $status,
             'directories' => Directory::orderBy('path')->get(),
-            'current' => $current]);
+            'current' => $current,
+            'picture_count' => Picture::all()->count(),
+        ]);
     }
 
 }

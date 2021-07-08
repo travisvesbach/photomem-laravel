@@ -14,10 +14,11 @@ function ajaxSync(url, type = "POST", data = null) {
         },
         success: function(data) {
             output = jQuery.parseJSON(data);
+            updateDisplay(output);
             if(output.status && output.status == 'syncing') {
                 syncStatus();
             } else {
-                syncComplete(output);
+                enableButtons();
             }
 
         },
@@ -35,6 +36,7 @@ function syncStatus() {
         datatype: "json",
         success: function(data) {
             output = jQuery.parseJSON(data);
+            updateDisplay(output);
             if(output.status && output.status == 'syncing') {
                 if(output.current) {
                     $('.alert-message').text('Syncing ' + output.current);
@@ -44,7 +46,7 @@ function syncStatus() {
                     syncStatus();
                 }, 5000);
             } else {
-                syncComplete(output);
+                enableButtons();
             }
         },
         error: function(data) {
@@ -55,7 +57,7 @@ function syncStatus() {
 }
 
 function disableButtons() {
-    $('button').prop('disabled', true);
+    $('button:not(.accordion-control)').prop('disabled', true);
     $('.alert-syncing').css('display', 'flex');
     $('body').css('cursor', 'wait');
 }
@@ -67,7 +69,7 @@ function enableButtons() {
     $('body').css('cursor', 'inherit');
 }
 
-function syncComplete(output) {
+function updateDisplay(output) {
     if($('.directory-row').length != output.directories.length) {
         alert("Number of directories has changed" + "\n\nClick 'OK' to refresh the page");
         location.reload();
@@ -82,13 +84,13 @@ function syncComplete(output) {
         let target = $('#directory-' + dir.id);
         if(dir.status == 'ignored') {
             target.addClass('disabled');
+            target.find('.button-sync').text('Sync');
             target.find('.ignored-hidden').hide();
-            target.find('.ignored-show').show();
         } else {
             let target = $('#directory-' + dir.id);
             target.removeClass('disabled');
+            target.find('.button-sync').text(dir.status == 'synced' ? 'Resync' : 'Sync');
             target.find('.ignored-hidden').show();
-            target.find('.ignored-show').hide();
         }
         target.find('.directory-status').text(dir.status);
         target.find('.directory-picture-count').text(dir.picture_count);
@@ -100,10 +102,10 @@ window.runSync = function(url) {
     ajaxSync(url)
 }
 
-function ignoreDirectory(url) {
+window.ignoreDirectory = function(url) {
 
     if(confirm('Are you sure you?\n\nChild directories will be ignored and synced pictures will be removed.')) {
-        ajaxSync(url, "PATCH", {"ignore": true})
+        ajaxSync(url, "PATCH", {"status": true})
     }
 }
 

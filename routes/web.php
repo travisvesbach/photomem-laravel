@@ -19,5 +19,6 @@ Route::view('/about', 'about')->name('about');
 
 Route::get('/directories', [DirectoriesController::class, 'index'])->name('directories');
 Route::post('/directories/sync', [DirectoriesController::class, 'syncDirectories'])->name('directories.syncDirectories');
-Route::post('/directories/{directory}/sync', [DirectoriesController::class, 'sync'])->name('directories.sync');
 Route::get('/directories/sync_status', [DirectoriesController::class, 'syncStatus'])->name('directories.syncStatus');
+Route::post('/directories/{directory}/sync', [DirectoriesController::class, 'sync'])->name('directories.sync');
+Route::patch('/directories/{directory}/update', [DirectoriesController::class, 'update'])->name('directories.update');

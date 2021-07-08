@@ -175,6 +175,7 @@ code {
     padding: 1rem;
     font-weight: bold;
     display: none;
+    z-index: 1;
 }
 
 .alert-normal {
