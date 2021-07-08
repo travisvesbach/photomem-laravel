@@ -13,10 +13,9 @@ class Picture extends Model
 
     public function path() {
         return $this->directory->path . '/' . $this->name;
-        // return str_replace(
-        //     [' ', '\''],
-        //     ['\ ', '\\\''],
-        //     $this->directory->absolutePath() . '/' . $this->name
-        // );
+    }
+
+    public function scopeTakenToday($query) {
+        return $query->whereRaw("strftime( '%m', pictures.date_taken ) = strftime('%m','now', 'localtime') AND strftime( '%d', pictures.date_taken ) = strftime('%d','now', 'localtime')");
     }
 }

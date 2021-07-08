@@ -111,7 +111,9 @@ window.ignoreDirectory = function(url) {
 
 
 $(document).ready(function(){
-    syncStatus();
+    if (window.location.pathname.includes('/directories')) {
+        syncStatus();
+    }
     $('.accordion-control').on('click', function(e){
         e.preventDefault();
         let open = !$(this).next('.accordion-panel').hasClass('open');

@@ -48,6 +48,10 @@ class Directory extends Model
         return $this->hasMany(Picture::class);
     }
 
+    public function getPicturesTakenToday() {
+        return $this->pictures()->takenToday()->get();
+    }
+
     public function setPictureCounts() {
         $this->picture_count = $this->pictures->count();
         $count = $this->picture_count;
@@ -169,5 +173,12 @@ class Directory extends Model
                 $directory->delete();
             }
         }
+    }
+
+    // get all directories that have pictures taken today in history
+    public function scopeHasTakenToday($query) {
+        return $query->whereHas('pictures', function($query) {
+            $query->takenToday();
+        });
     }
 }

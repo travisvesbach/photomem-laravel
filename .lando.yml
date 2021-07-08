@@ -9,6 +9,8 @@ services:
       - npm install
     run_as_root:
       - apt-get install imagemagick
+      - ln -snf /usr/share/zoneinfo/America/Chicago /etc/localtime
+      - echo "America/Chicago" > /etc/timezone
 tooling:
   npm:
     service: node

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DirectoriesController;
+use App\Http\Controllers\PicturesController;
+use App\Models\Directory;
+use App\Models\Picture;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +17,11 @@ use App\Http\Controllers\DirectoriesController;
 |
 */
 
-Route::view('/', 'index');
+Route::view('/', 'index', [
+    'pictures' => Picture::all(),
+    'pictures_today' => Picture::takenToday()->get(),
+    'directories' => Directory::orderBy('path')->get(),
+]);
 Route::view('/about', 'about')->name('about');
 
 Route::get('/directories', [DirectoriesController::class, 'index'])->name('directories');
@@ -22,3 +29,5 @@ Route::post('/directories/sync', [DirectoriesController::class, 'syncDirectories
 Route::get('/directories/sync_status', [DirectoriesController::class, 'syncStatus'])->name('directories.syncStatus');
 Route::post('/directories/{directory}/sync', [DirectoriesController::class, 'sync'])->name('directories.sync');
 Route::patch('/directories/{directory}/update', [DirectoriesController::class, 'update'])->name('directories.update');
+
+Route::get('/pictures/random', [PicturesController::class, 'random'])->name('pictures.random');
