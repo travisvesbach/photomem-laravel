@@ -41,7 +41,7 @@
         </div>
 
         <div class="row">
-            <a href="{{ route('pictures.random') }}?today&date=true" class="button">Today or Random</a>
+            <a href="{{ route('pictures.random') }}?today=true&date=true" class="button">Today or Random</a>
             <a href="{{ route('pictures.random') }}?date=true" class="button">Random</a>
             <a href="{{ route('pictures.random') }}?orientation=landscape&date=true" class="button">Random Landscape</a>
             <a href="{{ route('pictures.random') }}?orientation=portrait&date=true" class="button">Random Portrait</a>

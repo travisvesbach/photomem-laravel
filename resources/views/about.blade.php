@@ -38,7 +38,7 @@
             <!-- </tr> -->
             <tr>
                 <td>today in history</td>
-                <td>today=true or today</td>
+                <td>today=true</td>
             </tr>
             <tr>
                 <td>crop</td>
