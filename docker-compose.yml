@@ -8,3 +8,4 @@ services:
       - 1212:1212
     volumes:
       - ./var/www
+    env_file: .env
