@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+services:
+  app:
+    build: .
+    image: 'photomem'
+    ports:
+      - 1212:1212
+    volumes:
+      - ./var/www
