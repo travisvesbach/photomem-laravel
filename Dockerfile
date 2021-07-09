@@ -27,7 +27,7 @@ RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /app
 
 USER $user
 
