@@ -79,7 +79,7 @@ class Directory extends Model
 
     // syncs pictures in self and non-ignored subdirectories
     public function syncPictures() {
-        $this->status = 'unsynced';
+        $this->status = 'syncing';
         $this->save();
         $this->deleteNonexistantPictures();
 
@@ -92,7 +92,28 @@ class Directory extends Model
             if(!$this->pictures->where('name', $name)->count() > 0) {
                 if($image = Image::make($filename)) {
 
-                    $orientation = null;
+                    // $escaped_path = Picture::escapePath($filename);
+
+                    // $orientation = shell_exec("identify -format '%[EXIF:Orientation]' " . $escaped_path);
+                    // $width = shell_exec("identify -format '%[width]' " . $escaped_path);
+                    // $height = shell_exec("identify -format '%[height]' " . $escaped_path);
+                    // if($orientation == 1 || $orientation == 3) {
+                    //     $orientation = 'landscape';
+                    // } elseif($orientation == 6 || $orientation == 8) {
+                    //     $orientation = 'portrait';
+                    // } elseif($width > $height) {
+                    //     $orientation = 'landscape';
+                    // } elseif($width < $height) {
+                    //     $orientation = 'portrait';
+                    // }
+                    // $picture = [
+                    //     'name' => $name,
+                    //     'date_taken' => date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $escaped_path))),
+                    //     'directory_id' => $this->id,
+                    //     'orientation' => $orientation
+                    // ];
+
+                    $orientation = '';
                     if($image->exif('Orientation') == 1 || $image->exif('Orientation') == 3) {
                         $orientation = 'landscape';
                     } elseif($image->exif('Orientation') == 6 || $image->exif('Orientation') == 8) {
@@ -102,6 +123,7 @@ class Directory extends Model
                     } elseif($image->width() < $image->height()) {
                         $orientation = 'portrait';
                     }
+
 
                     $picture = [
                         'name' => $name,

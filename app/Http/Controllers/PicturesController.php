@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Picture;
-use Image;
 
 class PicturesController extends Controller
 {
@@ -15,7 +14,7 @@ class PicturesController extends Controller
             $picture = Picture::orientation($request->orientation)->random();
         }
 
-        $path = $picture->excapedPath();
+        $path = $picture->escapedPath();
 
         $color = ' ';
         if(($request->color && $request->color == 'gray') || ($request->color && $request->color == 'grey')) {
@@ -51,7 +50,6 @@ class PicturesController extends Controller
         if($request->format && $request->format == 'bytes') {
             $script = public_path('scripts') . '/imgconvert.py';
             $new_destination = public_path('storage') . '/converted.txt';
-            // dd("python3 " . $script . " -i " . $destination . " -n pic -o " . $new_destination . ' 2>&1');
             shell_exec("python3 " . $script . " -i " . $destination . " -n pic -o " . $new_destination . ' 2>&1');
             return response()->file($new_destination);
         }

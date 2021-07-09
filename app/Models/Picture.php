@@ -17,12 +17,13 @@ class Picture extends Model
         return $this->directory->path . '/' . $this->name;
     }
 
-    public function excapedPath() {
+    public function escapedPath() {
         return str_replace(
-            [' ', '\''],
-            ['\ ', '\\\''],
+            [' ', '\'', '&'],
+            ['\ ', '\\\'', '\&'],
             $this->directory->path . '/' . $this->name
         );
+        // return self::escapePath($this->directory->path . '/' . $this->name);
     }
 
     public function scopeTakenToday($query) {
@@ -47,5 +48,13 @@ class Picture extends Model
             return $pictures->random();
         }
         return self::orientation($orientation)->random();
+    }
+
+    public static function escapePath($path) {
+        return str_replace(
+            [' ', '\'', '&'],
+            ['\ ', '\\\'', '\&'],
+            $path
+        );
     }
 }

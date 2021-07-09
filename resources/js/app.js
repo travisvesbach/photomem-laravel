@@ -89,7 +89,7 @@ function updateDisplay(output) {
         } else {
             let target = $('#directory-' + dir.id);
             target.removeClass('disabled');
-            target.find('.button-sync').text(dir.status == 'synced' ? 'Resync' : 'Sync');
+            target.find('.button-sync').text(dir.status == 'synced' || dir.status == 'syncing' ? 'Resync' : 'Sync');
             target.find('.ignored-hidden').show();
         }
         target.find('.directory-status').text(dir.status);
