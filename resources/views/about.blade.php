@@ -46,7 +46,7 @@
             </tr>
             <tr>
                 <td>grayscale</td>
-                <td>color=gray or mode=gray or gray</td>
+                <td>color=gray or color=grey</td>
             </tr>
             <tr>
                 <td>format</td>
@@ -58,7 +58,7 @@
             </tr>
             <tr>
                 <td>include date</td>
-                <td>date=true or date</td>
+                <td>date=true</td>
             </tr>
             <tr>
                 <td>orientation</td>

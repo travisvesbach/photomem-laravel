@@ -8,9 +8,10 @@ services:
     build:
       - npm install
     run_as_root:
+      - apt-get update
       - apt-get install imagemagick
-      - ln -snf /usr/share/zoneinfo/America/Chicago /etc/localtime
-      - echo "America/Chicago" > /etc/timezone
+      - apt-get install -y python3 python3-pip
+      - python3 -m pip install pillow
 tooling:
   npm:
     service: node

@@ -7,12 +7,22 @@ use App\Models\Directory;
 
 class Picture extends Model
 {
+    protected $dates = ['created_at', 'updated_at', 'date_taken'];
+
     public function directory() {
         return $this->belongsTo(Directory::class);
     }
 
     public function path() {
         return $this->directory->path . '/' . $this->name;
+    }
+
+    public function excapedPath() {
+        return str_replace(
+            [' ', '\''],
+            ['\ ', '\\\''],
+            $this->directory->path . '/' . $this->name
+        );
     }
 
     public function scopeTakenToday($query) {

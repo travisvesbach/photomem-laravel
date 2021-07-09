@@ -17,6 +17,8 @@ class Directory extends Model
         'total_picture_count'
     ];
 
+    protected $dates = ['created_at', 'updated_at'];
+
     public function directory() {
         return $this->belongsTo(Directory::class);
     }
@@ -41,7 +43,8 @@ class Directory extends Model
     }
 
     public function displayPath() {
-        return explode(env('SYNC_DIRECTORY'), $this->path)[1];
+        // dd(explode(public_path('storage') . '/sync/', $this->path));
+        return explode(public_path('storage') . '/sync/', $this->path)[1];
     }
 
     public function pictures() {
@@ -72,10 +75,6 @@ class Directory extends Model
                 $picture->delete();
             }
         }
-    }
-
-    public function absolutePath() {
-        return env('PUBLIC_DIRECTORY') . substr($this->path, 1);
     }
 
     // syncs pictures in self and non-ignored subdirectories

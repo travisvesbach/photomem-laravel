@@ -18,7 +18,7 @@ class CreatePicturesTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->dateTime('date_taken')->nullable();
-            $table->integer('orientation')->nullable();
+            $table->string('orientation')->nullable();
             $table->foreignId('directory_id')->onDelete('cascade');
         });
     }

@@ -62,7 +62,7 @@ class DirectoriesController extends Controller
 
     public function syncDirectories() {
         Directory::deleteNonexistant();
-        Directory::syncSubDirectories(env('SYNC_DIRECTORY').'*');
+        Directory::syncSubDirectories(public_path('storage').'/sync/*');
         return json_encode(['directories' => Directory::orderBy('path')->get()]);
     }
 
@@ -71,7 +71,7 @@ class DirectoriesController extends Controller
         $current = null;
         if(Queue::size() > 0) {
             $status = 'syncing';
-            $current = str_replace(env('SYNC_DIRECTORY'), '', unserialize(json_decode(DB::table('jobs')->first()->payload)->data->command)->directory->path);
+            $current = str_replace(public_path('storage') . '/sync/', '', unserialize(json_decode(DB::table('jobs')->first()->payload)->data->command)->directory->path);
         }
         return json_encode([
             'status' => $status,
