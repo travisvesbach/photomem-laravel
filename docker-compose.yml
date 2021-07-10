@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 # define all services
 services:
   # our service is called laravel ;-)
@@ -9,19 +9,18 @@ services:
     # apache is running on port 80 but we want to expose this to port 1212 on our local machine
     ports:
       - "1212:80"
-    # we depending on the mysql backend
-    depends_on:
-      - mysql
-  mysql:
-    # we use the mysql
-    image: mysql
-    # we mount a datavolume to make sure we don't loose data
     volumes:
-       - db_data:/var/lib/mysql
-    # setting some envvars to create the DB
-    environment:
-      - MYSQL_ROOT_PASSWORD=
-      - MYSQL_DATABASE=laravel
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-volumes:
-    db_data:
+      - ./:/var/www/html
+#    command: composer install
+#    command: php artisan migrate
+
+#services:
+#  web:
+#    environment:
+#    - APACHE_RUN_USER=#1000
+#    build:
+#      context: ./docker/web
+#    ports:
+#    - 1212:80
+#    volumes:
+#    - ./:/var/www/html
