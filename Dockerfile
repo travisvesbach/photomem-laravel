@@ -9,13 +9,11 @@ RUN apt-get update && apt-get install -y \
       git \
       zip \
       unzip \
-      mcrypt \
     && rm -r /var/lib/apt/lists/* \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
     && docker-php-ext-install \
       intl \
       mbstring \
-      mcrypt \
       pcntl \
       pdo_mysql \
       pdo_pgsql \
