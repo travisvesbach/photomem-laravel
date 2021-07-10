@@ -19,7 +19,7 @@
     <body>
         <header>
             <h1>
-                <a href="/">PhotoMem</a>
+                <a href="/">{{ env('APP_NAME') }}</a>
             </h1>
             <div class="nav">
                 <a href="/" class="nav-link">Home</a>

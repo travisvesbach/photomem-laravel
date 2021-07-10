@@ -11,6 +11,7 @@ services:
       - "1212:80"
     volumes:
       - ./:/var/www/html
+    entrypoint: sh -c "/init.sh"
 #    command: composer install
 #    command: php artisan migrate
 

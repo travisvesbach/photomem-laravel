@@ -37,7 +37,7 @@ class PicturesController extends Controller
 
         $tmp = explode('.', $picture->name);
         $extension = end($tmp);
-        if($request->extension && $request->extension != 'bytes') {
+        if($request->format && $request->format != 'bytes') {
             $extension = $request->extension;
         }
 

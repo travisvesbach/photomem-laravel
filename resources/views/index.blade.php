@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    PhotoMem
+    {{ env('APP_NAME') }}
 @endsection
 
 @section('content')
