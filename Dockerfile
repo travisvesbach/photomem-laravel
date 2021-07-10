@@ -46,8 +46,10 @@ RUN composer install --no-interaction
 #change ownership of our applications
 RUN chown -R www-data:www-data $APP_HOME
 
-# Install python, pip, and pillow
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip
+# Install imagemagick, python, pip, and pillow
+RUN apt-get update -y
+RUN apt-get install imagemagick -y
+RUN apt-get install -y python3 python3-pip
+# install pip dependencies
+RUN apt-get install libjpeg-dev zlib1g-dev
 RUN python3 -m pip install pillow
