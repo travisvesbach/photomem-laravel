@@ -1,31 +1,50 @@
+#start with our base image (the foundation) - version 7.4
 FROM php:7.4-apache
 
-USER root
-
-WORKDIR /app
-
+#install all the system dependencies and enable PHP modules
 RUN apt-get update && apt-get install -y \
-        libpng-dev \
-        zlib1g-dev \
-        libxml2-dev \
-        libzip-dev \
-        libonig-dev \
-        zip \
-        curl \
-        unzip \
-    && docker-php-ext-configure gd \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install mysqli \
-    && docker-php-ext-install zip \
-    && docker-php-source delete
+      libicu-dev \
+      libpq-dev \
+      libmcrypt-dev \
+      git \
+      zip \
+      unzip \
+    && rm -r /var/lib/apt/lists/* \
+    && docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
+    && docker-php-ext-install \
+      intl \
+      mbstring \
+      mcrypt \
+      pcntl \
+      pdo_mysql \
+      pdo_pgsql \
+      pgsql \
+      zip \
+      opcache
 
-COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
+#install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+#set our application folder as an environment variable
+ENV APP_HOME /var/www/html
 
-RUN chown -R www-data:www-data /app\
-    && a2enmod rewrite
+#change uid and gid of apache to docker user uid/gid
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+
+#change the web_root to laravel /var/www/html/public folder
+RUN sed -i -e "s/html/html\/public/g" /etc/apache2/sites-enabled/000-default.conf
+
+# enable apache module rewrite
+RUN a2enmod rewrite
+
+#copy source files and run composer
+COPY . $APP_HOME
+
+# install all PHP dependencies
+RUN composer install --no-interaction
+
+#change ownership of our applications
+RUN chown -R www-data:www-data $APP_HOME
 
 # Install python, pip, and pillow
 RUN apt-get update && apt-get install -y \
