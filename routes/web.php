@@ -17,11 +17,7 @@ use App\Models\Picture;
 |
 */
 
-Route::view('/', 'index', [
-    'pictures' => Picture::all(),
-    'pictures_today' => Picture::takenToday()->get(),
-    'directories' => Directory::orderBy('path')->get(),
-]);
+Route::view('/', 'index');
 Route::view('/about', 'about')->name('about');
 
 Route::get('/directories', [DirectoriesController::class, 'index'])->name('directories');
