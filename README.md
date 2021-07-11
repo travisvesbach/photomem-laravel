@@ -16,13 +16,15 @@ current setup uses sqlite
 - clone repo
 - run `docker-compose up --build -d`
 - create db: `touch database/photomem.sqlite`
-- edit `.env` file with sqlite credentials:
+- edit `.env` file with sqlite credentials and queue_connection
 ```
 DB_CONNECTION=sqlite
 DB_DATABASE=/var/www/html/database/photomem.sqlite
 DB_FOREIGN_KEYS=true
+
+QUEUE_CONNECTION=database
 ```
-- inside the container, run `composer install` and `php artisan migrate`
+- inside the container, run `composer install --no-dev` and `php artisan migrate` as the `www-data` user.
 
 
 ### Images
