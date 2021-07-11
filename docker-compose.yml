@@ -3,7 +3,7 @@ version: '3'
 services:
   # our service is called laravel ;-)
   laravel:
-    image: 'photomem'
+    image: php-laravel:latest
     # we want to use the image which is build from our Dockerfile
     build: .
     # apache is running on port 80 but we want to expose this to port 1212 on our local machine
@@ -11,17 +11,14 @@ services:
       - "1212:80"
     volumes:
       - ./:/var/www/html
-    entrypoint: sh -c "/init.sh"
-#    command: composer install
-#    command: php artisan migrate
+    # run composer install, create DB, and migrate on container 
+#    command: composer install --no-dev --no-interaction -o && touch /var/www/html/database/photomem.sqlite && php artisan migrate
+#    command: bash -c /var/www/html/init.sh
 
-#services:
-#  web:
-#    environment:
-#    - APACHE_RUN_USER=#1000
-#    build:
-#      context: ./docker/web
-#    ports:
-#    - 1212:80
+  # for running sync jobs
+#  php-queue:
+#    image: php-laravel:latest
+#    command: php artisan queue:work --verbose --tries=3 --timeout=90
 #    volumes:
-#    - ./:/var/www/html
+#        - ./:/var/www/html/
+
