@@ -11,14 +11,22 @@ services:
       - "1212:80"
     volumes:
       - ./:/var/www/html
-    # run composer install, create DB, and migrate on container 
-#    command: composer install --no-dev --no-interaction -o && touch /var/www/html/database/photomem.sqlite && php artisan migrate
-#    command: bash -c /var/www/html/init.sh
 
   # for running sync jobs
-#  php-queue:
-#    image: php-laravel:latest
-#    command: php artisan queue:work --verbose --tries=3 --timeout=90
-#    volumes:
-#        - ./:/var/www/html/
+  php-queue:
+    restart: always
+    image: php-laravel:latest
+    command: php artisan queue:work
+    volumes:
+        - ./:/var/www/html/
 
+#  db:
+#    image: linuxserver/mariadb:latest
+#    restart: always
+#    environment: 
+#      MYSQL_DATABASE: laravel
+#      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+#    volumes:
+#      - ./data:/var/lib/mysql
+#    ports: 
+#      - 33061:3306
