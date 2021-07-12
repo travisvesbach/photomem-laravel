@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Directory;
-use App\Models\Picture;
+use App\Models\Photo;
 use File;
 use Queue;
 use Illuminate\Queue\Jobs\Job;
@@ -19,7 +19,7 @@ class DirectoriesController extends Controller
             'directories' => $directories,
             'synced' => $directories->where('status', 'synced')->count(),
             'ignored' => $directories->where('status', 'ignored')->count(),
-            'picture_count' => Picture::all()->count(),
+            'photo_count' => Photo::all()->count(),
         ]);
     }
 
@@ -27,13 +27,13 @@ class DirectoriesController extends Controller
         if($request->input('status') == 'true') {
             $directory->ignore();
             foreach($directory->getParentDirectories() as $parent) {
-                $parent->setPictureCounts();
+                $parent->setPhotoCounts();
             }
         }
 
         return json_encode([
             'directories' => Directory::orderBy('path')->get(),
-            'picture_count' => Picture::all()->count(),
+            'photo_count' => Photo::all()->count(),
         ]);
     }
 
@@ -55,7 +55,7 @@ class DirectoriesController extends Controller
         Directory::syncSubDirectories($directory->path, $directory->id);
 
         // create SyncPitcures jobs for current directory and all child directories
-        $directory->addSyncPicturesJob();
+        $directory->addSyncPhotosJob();
 
         return $this->syncStatus();
     }
@@ -77,7 +77,7 @@ class DirectoriesController extends Controller
             'status' => $status,
             'directories' => Directory::orderBy('path')->get(),
             'current' => $current,
-            'picture_count' => Picture::all()->count(),
+            'photo_count' => Photo::all()->count(),
         ]);
     }
 

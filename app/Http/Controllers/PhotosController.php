@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Picture;
+use App\Models\Photo;
 
-class PicturesController extends Controller
+class PhotosController extends Controller
 {
     public function random(Request $request) {
         if($request->today) {
-            $picture = Picture::todayOrRandom($request->orientation);
+            $photo = Photo::todayOrRandom($request->orientation);
         } else {
-            $picture = Picture::orientation($request->orientation)->random();
+            $photo = Photo::orientation($request->orientation)->random();
         }
 
-        $path = $picture->escapedPath();
+        $path = $photo->escapedPath();
 
         $color = ' ';
         if(($request->color && $request->color == 'gray') || ($request->color && $request->color == 'grey')) {
@@ -30,12 +30,12 @@ class PicturesController extends Controller
         }
 
         $date = ' ';
-        if($request->date && $picture->date_taken) {
-            $date .= "-fill white -pointsize 48 -undercolor '#0008' -gravity Southeast -draw 'text 0,-9 \"" .  $picture->date_taken->format('n/j/Y') . "\"' ";
+        if($request->date && $photo->date_taken) {
+            $date .= "-fill white -pointsize 48 -undercolor '#0008' -gravity Southeast -draw 'text 0,-9 \"" .  $photo->date_taken->format('n/j/Y') . "\"' ";
         }
 
 
-        $tmp = explode('.', $picture->name);
+        $tmp = explode('.', $photo->name);
         $extension = end($tmp);
         if($request->format && $request->format != 'bytes') {
             $extension = $request->extension;

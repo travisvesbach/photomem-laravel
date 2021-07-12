@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DirectoriesController;
-use App\Http\Controllers\PicturesController;
+use App\Http\Controllers\PhotosController;
 use App\Models\Directory;
-use App\Models\Picture;
+use App\Models\Photo;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +26,4 @@ Route::get('/directories/sync_status', [DirectoriesController::class, 'syncStatu
 Route::post('/directories/{directory}/sync', [DirectoriesController::class, 'sync'])->name('directories.sync');
 Route::patch('/directories/{directory}/update', [DirectoriesController::class, 'update'])->name('directories.update');
 
-Route::get('/pictures/random', [PicturesController::class, 'random'])->name('pictures.random');
+Route::get('/photos/random', [PhotosController::class, 'random'])->name('photos.random');

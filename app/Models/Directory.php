@@ -3,18 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Picture;
+use App\Models\Photo;
 use File;
 use Image;
-use App\Jobs\SyncPictures;
+use App\Jobs\SyncPhotos;
 
 class Directory extends Model
 {
     protected $fillable = [
         'path',
         'directory_id',
-        'picture_count',
-        'total_picture_count'
+        'photo_count',
+        'total_photo_count'
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -46,51 +46,51 @@ class Directory extends Model
         return explode(public_path('storage') . '/sync/', $this->path)[1];
     }
 
-    public function pictures() {
-        return $this->hasMany(Picture::class);
+    public function photos() {
+        return $this->hasMany(Photo::class);
     }
 
-    public function getPicturesTakenToday() {
-        return $this->pictures()->takenToday()->get();
+    public function getPhotosTakenToday() {
+        return $this->photos()->takenToday()->get();
     }
 
-    public function setPictureCounts() {
-        $this->picture_count = $this->pictures->count();
-        $count = $this->picture_count;
+    public function setPhotoCounts() {
+        $this->photo_count = $this->photos->count();
+        $count = $this->photo_count;
         foreach($this->directories as $directory) {
-            $count += $directory->total_picture_count;
+            $count += $directory->total_photo_count;
         }
-        $this->total_picture_count = $count;
+        $this->total_photo_count = $count;
         $this->save();
     }
 
-    public function deletePictures() {
-        $this->pictures()->delete();
+    public function deletePhotos() {
+        $this->photos()->delete();
     }
 
-    public function deleteNonexistantPictures() {
-        foreach($this->pictures as $picture) {
-            if(!File::exists($picture->path())) {
-                $picture->delete();
+    public function deleteNonexistantPhotos() {
+        foreach($this->photos as $photo) {
+            if(!File::exists($photo->path())) {
+                $photo->delete();
             }
         }
     }
 
-    // syncs pictures in self and non-ignored subdirectories
-    public function syncPictures() {
+    // syncs photos in self and non-ignored subdirectories
+    public function syncPhotos() {
         $this->status = 'syncing';
         $this->save();
-        $this->deleteNonexistantPictures();
+        $this->deleteNonexistantPhotos();
 
-        $picture_array = [];
+        $photo_array = [];
         foreach (glob($this->path . "/*.{jpg,png,jpeg,JPG,PNG,JPEG}", GLOB_BRACE) as $filename) {
             $arr = explode('/', $filename);
             $name = end($arr);
 
-            // if directory doesn't contain picture with name
-            if(!$this->pictures->where('name', $name)->count() > 0) {
+            // if directory doesn't contain photo with name
+            if(!$this->photos->where('name', $name)->count() > 0) {
 
-                $escaped_path = Picture::escapePath($filename);
+                $escaped_path = Photo::escapePath($filename);
 
                 $orientation = shell_exec("identify -format '%[EXIF:Orientation]' " . $escaped_path);
                 if($orientation == 1 || $orientation == 3) {
@@ -111,47 +111,47 @@ class Directory extends Model
                 }
 
 
-                $picture = [
+                $photo = [
                     'name' => $name,
                     'date_taken' => date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $escaped_path))),
                     'directory_id' => $this->id,
                     'orientation' => $orientation
                 ];
 
-                $picture_array[] = $picture;
-                if(count($picture_array) >= 100) {
-                    Picture::insert($picture_array);
-                    $picture_array = [];
+                $photo_array[] = $photo;
+                if(count($photo_array) >= 100) {
+                    Photo::insert($photo_array);
+                    $photo_array = [];
                 }
             }
         }
 
-        if(count($picture_array) > 0) {
-            Picture::insert($picture_array);
+        if(count($photo_array) > 0) {
+            Photo::insert($photo_array);
         }
 
         $this->refresh();
         $this->status = 'synced';
         $this->save();
-        $this->setPictureCounts();
+        $this->setPhotoCounts();
     }
 
-    public function addSyncPicturesJob() {
+    public function addSyncPhotosJob() {
         if($this->status != 'ignored') {
-            SyncPictures::dispatch($this);
+            SyncPhotos::dispatch($this);
 
             foreach($this->directories as $directory) {
-                $directory->addSyncPicturesJob();
+                $directory->addSyncPhotosJob();
             }
         }
     }
 
     // set self and child directories' status to 'ignored'
     public function ignore() {
-        $this->deletePictures();
+        $this->deletePhotos();
         $this->status = 'ignored';
-        $this->picture_count = 0;
-        $this->total_picture_count = 0;
+        $this->photo_count = 0;
+        $this->total_photo_count = 0;
         $this->save();
 
         foreach ($this->directories as $child) {
@@ -180,9 +180,9 @@ class Directory extends Model
         }
     }
 
-    // get all directories that have pictures taken today in history
+    // get all directories that have photos taken today in history
     public function scopeHasTakenToday($query) {
-        return $query->whereHas('pictures', function($query) {
+        return $query->whereHas('photos', function($query) {
             $query->takenToday();
         });
     }

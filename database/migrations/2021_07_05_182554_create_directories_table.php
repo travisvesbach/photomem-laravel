@@ -18,8 +18,8 @@ class CreateDirectoriesTable extends Migration
             $table->timestamps();
             $table->string('path')->unique();
             $table->string('status')->default('unsynced');
-            $table->integer('picture_count')->default(0);
-            $table->integer('total_picture_count')->default(0);
+            $table->integer('photo_count')->default(0);
+            $table->integer('total_photo_count')->default(0);
             $table->integer('directory_id')->nullable();
         });
     }

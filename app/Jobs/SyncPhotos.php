@@ -9,9 +9,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Directory;
-use App\Models\Picture;
+use App\Models\Photo;
 
-class SyncPictures implements ShouldQueue
+class SyncPhotos implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -35,11 +35,11 @@ class SyncPictures implements ShouldQueue
      */
     public function handle()
     {
-        $this->directory->syncPictures();
+        $this->directory->syncPhotos();
 
-        // set parent picture counts
+        // set parent photo counts
         foreach($this->directory->getParentDirectories() as $parent) {
-            $parent->setPictureCounts();
+            $parent->setPhotoCounts();
         }
     }
 }

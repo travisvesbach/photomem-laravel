@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Directory;
 
-class Picture extends Model
+class Photo extends Model
 {
     protected $dates = ['created_at', 'updated_at', 'date_taken'];
 
@@ -27,7 +27,7 @@ class Picture extends Model
     }
 
     public function scopeTakenToday($query) {
-        return $query->whereRaw("strftime( '%m', pictures.date_taken ) = strftime('%m','now', 'localtime') AND strftime( '%d', pictures.date_taken ) = strftime('%d','now', 'localtime')");
+        return $query->whereRaw("strftime( '%m', photos.date_taken ) = strftime('%m','now', 'localtime') AND strftime( '%d', photos.date_taken ) = strftime('%d','now', 'localtime')");
     }
 
     public function scopeOrientation($query, $orientation = null) {
@@ -43,9 +43,9 @@ class Picture extends Model
 
     // if none found for today with orientation, return random with orientation
     public static function todayOrRandom($orientation = null) {
-        $pictures = self::takenToday()->orientation($orientation)->get();
-        if($pictures->count() > 0) {
-            return $pictures->random();
+        $photos = self::takenToday()->orientation($orientation)->get();
+        if($photos->count() > 0) {
+            return $photos->random();
         }
         return self::orientation($orientation)->random();
     }

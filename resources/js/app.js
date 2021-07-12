@@ -78,7 +78,7 @@ function updateDisplay(output) {
     $('#directories-count').text(output.directories.length);
     $('#directories-synced-count').text(output.directories.filter (dir => dir.status === 'synced').length);
     $('#directories-ignored-count').text(output.directories.filter (dir => dir.status === 'ignored').length);
-    $('#picture-count').text(output.picture_count);
+    $('#photo-count').text(output.photo_count);
 
     output.directories.forEach(function(dir) {
         let target = $('#directory-' + dir.id);
@@ -93,8 +93,8 @@ function updateDisplay(output) {
             target.find('.ignored-hidden').show();
         }
         target.find('.directory-status').text(dir.status);
-        target.find('.directory-picture-count').text(dir.picture_count);
-        target.find('.directory-total-picture-count').text(dir.total_picture_count);
+        target.find('.directory-photo-count').text(dir.photo_count);
+        target.find('.directory-total-photo-count').text(dir.total_photo_count);
     });
 }
 
@@ -104,7 +104,7 @@ window.runSync = function(url) {
 
 window.ignoreDirectory = function(url) {
 
-    if(confirm('Are you sure you?\n\nChild directories will be ignored and synced pictures will be removed.')) {
+    if(confirm('Are you sure you?\n\nChild directories will be ignored and synced photos will be removed.')) {
         ajaxSync(url, "PATCH", {"status": true})
     }
 }

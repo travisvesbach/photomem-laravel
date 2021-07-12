@@ -31,4 +31,4 @@ images to be synced should be in public/storage/sync
 
 
 ### Notes
-Intervention Image used for picture syncing: http://image.intervention.io/api/save
+Intervention Image used for photo syncing: http://image.intervention.io/api/save
