@@ -43,7 +43,6 @@ class Directory extends Model
     }
 
     public function displayPath() {
-        // dd(explode(public_path('storage') . '/sync/', $this->path));
         return explode(public_path('storage') . '/sync/', $this->path)[1];
     }
 
@@ -90,54 +89,39 @@ class Directory extends Model
 
             // if directory doesn't contain picture with name
             if(!$this->pictures->where('name', $name)->count() > 0) {
-                if($image = Image::make($filename)) {
 
-                    // $escaped_path = Picture::escapePath($filename);
+                $escaped_path = Picture::escapePath($filename);
 
-                    // $orientation = shell_exec("identify -format '%[EXIF:Orientation]' " . $escaped_path);
-                    // $width = shell_exec("identify -format '%[width]' " . $escaped_path);
-                    // $height = shell_exec("identify -format '%[height]' " . $escaped_path);
-                    // if($orientation == 1 || $orientation == 3) {
-                    //     $orientation = 'landscape';
-                    // } elseif($orientation == 6 || $orientation == 8) {
-                    //     $orientation = 'portrait';
-                    // } elseif($width > $height) {
-                    //     $orientation = 'landscape';
-                    // } elseif($width < $height) {
-                    //     $orientation = 'portrait';
-                    // }
-                    // $picture = [
-                    //     'name' => $name,
-                    //     'date_taken' => date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $escaped_path))),
-                    //     'directory_id' => $this->id,
-                    //     'orientation' => $orientation
-                    // ];
+                $orientation = shell_exec("identify -format '%[EXIF:Orientation]' " . $escaped_path);
+                if($orientation == 1 || $orientation == 3) {
+                    $orientation = 'landscape';
+                } elseif($orientation == 6 || $orientation == 8) {
+                    $orientation = 'portrait';
+                }
 
-                    $orientation = '';
-                    if($image->exif('Orientation') == 1 || $image->exif('Orientation') == 3) {
+                // save two imagemagick commands if orientation is already set from exif data
+                if($orientation != 'landscape' && $orientation != 'portrait') {
+                    $width = shell_exec("identify -format '%[width]' " . $escaped_path);
+                    $height = shell_exec("identify -format '%[height]' " . $escaped_path);
+                    if($width > $height) {
                         $orientation = 'landscape';
-                    } elseif($image->exif('Orientation') == 6 || $image->exif('Orientation') == 8) {
-                        $orientation = 'portrait';
-                    } elseif($image->width() > $image->height()) {
-                        $orientation = 'landscape';
-                    } elseif($image->width() < $image->height()) {
+                    } elseif($width < $height) {
                         $orientation = 'portrait';
                     }
+                }
 
 
-                    $picture = [
-                        'name' => $name,
-                        'date_taken' => $image->exif('DateTimeOriginal') ? date('Y-m-d H:i:s', strtotime($image->exif('DateTimeOriginal'))) : null,
-                        'directory_id' => $this->id,
-                        'orientation' => $orientation
-                    ];
+                $picture = [
+                    'name' => $name,
+                    'date_taken' => date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $escaped_path))),
+                    'directory_id' => $this->id,
+                    'orientation' => $orientation
+                ];
 
-                    $picture_array[] = $picture;
-
-                    if(count($picture_array) >= 100) {
-                        Picture::insert($picture_array);
-                        $picture_array = [];
-                    }
+                $picture_array[] = $picture;
+                if(count($picture_array) >= 100) {
+                    Picture::insert($picture_array);
+                    $picture_array = [];
                 }
             }
         }

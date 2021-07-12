@@ -9,10 +9,8 @@ After lando rebuild, need to manually instal python3-pip:
 - python3 -m pip install pillow
 
 
-
 ### Docker Compose
 current setup uses sqlite
-
 - clone repo
 - run `docker-compose up --build -d`
 - create db: `touch database/photomem.sqlite`
@@ -24,7 +22,8 @@ DB_FOREIGN_KEYS=true
 
 QUEUE_CONNECTION=database
 ```
-- inside the container, run `composer install --no-dev` and `php artisan migrate` as the `www-data` user.
+- inside the container as the `www-data` user, run `composer install --no-dev` and `php artisan migrate`.
+- if mounting outside volume for syncing images, it needs to be mounted to both the main laravel container and the php-queue container
 
 
 ### Images
