@@ -35,11 +35,14 @@ class SyncPhotos implements ShouldQueue
      */
     public function handle()
     {
+        var_dump($this->directory->displayPath());
+        var_dump('starting photo_count: ' . $this->directory->photo_count);
         $this->directory->syncPhotos();
 
         // set parent photo counts
         foreach($this->directory->getParentDirectories() as $parent) {
             $parent->setPhotoCounts();
         }
+        var_dump('ending photo_count: ' . $this->directory->photo_count);
     }
 }
