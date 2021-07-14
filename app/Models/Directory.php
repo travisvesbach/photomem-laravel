@@ -62,6 +62,13 @@ class Directory extends Model
         }
         $this->total_photo_count = $count;
         $this->save();
+        $this->setParentPhotoCounts();
+    }
+
+    public function setPhotoCounts() {
+        foreach($this->getParentDirectories() as $parent) {
+            $parent->setPhotoCounts();
+        }
     }
 
     public function deletePhotos() {
