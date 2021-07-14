@@ -20,6 +20,7 @@ class PhotosController extends Controller
         if(($request->color && $request->color == 'gray') || ($request->color && $request->color == 'grey')) {
             $color .= '-colorspace gray';
         }
+        $orientation = ' -auto-orient ';
 
         $crop = ' ';
         if($request->crop) {
@@ -43,7 +44,7 @@ class PhotosController extends Controller
 
         $destination = public_path('storage') . '/converted.' . $extension;
 
-        $command = 'convert ' . $path . $color . $crop . $date . $destination;
+        $command = 'convert ' . $path . $color . $orientation . $crop . $date . $destination;
 
         shell_exec($command);
 
