@@ -42,10 +42,12 @@ class Photo extends Model
     }
 
     // if none found for today with orientation, return random with orientation
-    public static function todayOrRandom($orientation = null) {
-        $photos = self::takenToday()->orientation($orientation)->get();
-        if($photos->count() > 0) {
-            return $photos->random();
+    public static function todayOrRandom($today = false, $orientation = null) {
+        if($today) {
+            $photos = self::takenToday()->orientation($orientation)->get();
+            if($photos->count() > 0) {
+                return $photos->random();
+            }
         }
         return self::orientation($orientation)->random();
     }

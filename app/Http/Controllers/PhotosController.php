@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Photo;
+use File;
 
 class PhotosController extends Controller
 {
     public function random(Request $request) {
-        if($request->today) {
-            $photo = Photo::todayOrRandom($request->orientation);
-        } else {
-            $photo = Photo::orientation($request->orientation)->random();
+        $photo = Photo::todayOrRandom($request->today, $request->orientation);
+
+        while(!File::exists($photo->path())) {
+            $directory = $photo->directory;
+            $photo->delete();
+            $directory->setPhotoCounts();
+            $photo = Photo::todayOrRandom($request->today, $request->orientation);
         }
 
         $path = $photo->escapedPath();
