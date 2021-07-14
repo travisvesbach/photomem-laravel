@@ -65,7 +65,7 @@ class Directory extends Model
         $this->setParentPhotoCounts();
     }
 
-    public function setPhotoCounts() {
+    public function setParentPhotoCounts() {
         foreach($this->getParentDirectories() as $parent) {
             $parent->setPhotoCounts();
         }
