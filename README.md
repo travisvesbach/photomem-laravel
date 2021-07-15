@@ -12,6 +12,8 @@ After lando rebuild, need to manually instal python3-pip:
 ### Docker Compose
 current setup uses sqlite
 - clone repo
+- `cp docker-compose.yml.example docker-composer.yml`
+- edit `docker-composer.yml` and fill in volume mount for pictures if not included in site files
 - run `docker-compose up --build -d`
 - create db: `touch database/photomem.sqlite`
 - edit `.env` file with sqlite credentials and queue_connection

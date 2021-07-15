@@ -9,8 +9,11 @@ services:
     # apache is running on port 80 but we want to expose this to port 1212 on our local machine
     ports:
       - "1212:80"
+    # the first is for code, the second is to set container time to server/machine time, third is source of images
     volumes:
       - ./:/var/www/html
+      - "/etc/localtime:/etc/localtime:ro"
+      # ADD picture source (:ro = readonly): /path/to/source:/var/www/html/storage/sync:ro
 
   # for running sync jobs
   php-queue:
@@ -18,7 +21,9 @@ services:
     image: php-laravel:latest
     command: php artisan queue:work
     volumes:
-        - ./:/var/www/html/
+      - ./:/var/www/html/
+      - "/etc/localtime:/etc/localtime:ro" 
+      # ADD picture source (:ro = readonly): /path/to/source:/var/www/html/storage/sync:ro
 
 #  db:
 #    image: linuxserver/mariadb:latest
