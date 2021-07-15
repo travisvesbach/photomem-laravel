@@ -1,4 +1,4 @@
-name: photomem-laravel
+name: photomem
 recipe: laravel
 config:
   webroot: public/
