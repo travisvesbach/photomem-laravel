@@ -24,7 +24,7 @@
                         <td>{{ $photo->path() }}</td>
                         <td>
                             @if($photo->date_taken->year <= 1970)
-                                unknown
+                                {{ $photo->date_taken->format('Y-m-d') }}
                             @endif
                         </td>
                     </tr>
