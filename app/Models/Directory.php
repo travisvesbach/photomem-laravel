@@ -192,6 +192,7 @@ class Directory extends Model
     public static function deleteNonexistant() {
         foreach(self::all() as $directory) {
             if(!File::exists($directory->path)) {
+                $directory->deletePhotos();
                 $directory->delete();
             }
         }
