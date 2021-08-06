@@ -34,6 +34,11 @@
         </div>
 
         <div class="main-content">
+            <div class="alert alert-syncing">
+                <div class="lds-dual-ring"></div>
+                <div class="alert-message">Syncing...please wait</div>
+            </div>
+
             @yield('content')
         </div>
     </body>

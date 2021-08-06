@@ -59,43 +59,45 @@ function syncStatus() {
 function disableButtons() {
     $('button:not(.accordion-control)').prop('disabled', true);
     $('.alert-syncing').css('display', 'flex');
-    $('body').css('cursor', 'wait');
+    // $('body').css('cursor', 'wait');
 }
 
 function enableButtons() {
     $('.alert-syncing').css('display', 'none');
     $('.alert-message').text('Syncing...please wait');
     $('button').prop('disabled', false);
-    $('body').css('cursor', 'inherit');
+    // $('body').css('cursor', 'inherit');
 }
 
 function updateDisplay(output) {
-    if($('.directory-row').length != output.directories.length) {
-        alert("Number of directories has changed" + "\n\nClick 'OK' to refresh the page");
-        location.reload();
-    }
-
-    $('#directories-count').text(output.directories.length);
-    $('#directories-synced-count').text(output.directories.filter (dir => dir.status === 'synced').length);
-    $('#directories-ignored-count').text(output.directories.filter (dir => dir.status === 'ignored').length);
-    $('#photo-count').text(output.photo_count);
-
-    output.directories.forEach(function(dir) {
-        let target = $('#directory-' + dir.id);
-        if(dir.status == 'ignored') {
-            target.addClass('disabled');
-            target.find('.button-sync').text('Sync');
-            target.find('.ignored-hidden').hide();
-        } else {
-            let target = $('#directory-' + dir.id);
-            target.removeClass('disabled');
-            target.find('.button-sync').text(dir.status == 'synced' || dir.status == 'syncing' ? 'Resync' : 'Sync');
-            target.find('.ignored-hidden').show();
+    if (window.location.pathname.includes('/directories')) {
+        if($('.directory-row').length != output.directories.length) {
+            alert("Number of directories has changed" + "\n\nClick 'OK' to refresh the page");
+            location.reload();
         }
-        target.find('.directory-status').text(dir.status);
-        target.find('.directory-photo-count').text(dir.photo_count);
-        target.find('.directory-total-photo-count').text(dir.total_photo_count);
-    });
+
+        $('#directories-count').text(output.directories.length);
+        $('#directories-synced-count').text(output.directories.filter (dir => dir.status === 'synced').length);
+        $('#directories-ignored-count').text(output.directories.filter (dir => dir.status === 'ignored').length);
+        $('#photo-count').text(output.photo_count);
+
+        output.directories.forEach(function(dir) {
+            let target = $('#directory-' + dir.id);
+            if(dir.status == 'ignored') {
+                target.addClass('disabled');
+                target.find('.button-sync').text('Sync');
+                target.find('.ignored-hidden').hide();
+            } else {
+                let target = $('#directory-' + dir.id);
+                target.removeClass('disabled');
+                target.find('.button-sync').text(dir.status == 'synced' || dir.status == 'syncing' ? 'Resync' : 'Sync');
+                target.find('.ignored-hidden').show();
+            }
+            target.find('.directory-status').text(dir.status);
+            target.find('.directory-photo-count').text(dir.photo_count);
+            target.find('.directory-total-photo-count').text(dir.total_photo_count);
+        });
+    }
 }
 
 window.runSync = function(url) {
@@ -111,9 +113,7 @@ window.ignoreDirectory = function(url) {
 
 
 $(document).ready(function(){
-    if (window.location.pathname.includes('/directories')) {
-        syncStatus();
-    }
+    syncStatus();
     $('.accordion-control').on('click', function(e){
         e.preventDefault();
         let open = !$(this).next('.accordion-panel').hasClass('open');
