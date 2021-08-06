@@ -32,7 +32,7 @@ function ajaxSync(url, type = "POST", data = null) {
 function syncStatus() {
     $.ajax({
         type: 'GET',
-        url: '/directories/sync_status',
+        url: '/sync/status',
         datatype: "json",
         success: function(data) {
             output = jQuery.parseJSON(data);
@@ -70,7 +70,7 @@ function enableButtons() {
 }
 
 function updateDisplay(output) {
-    if (window.location.pathname.includes('/directories')) {
+    if (window.location.pathname.includes('/directories') && output.current != 'Broken Photos') {
         if($('.directory-row').length != output.directories.length) {
             alert("Number of directories has changed" + "\n\nClick 'OK' to refresh the page");
             location.reload();
@@ -96,6 +96,13 @@ function updateDisplay(output) {
             target.find('.directory-status').text(dir.status);
             target.find('.directory-photo-count').text(dir.photo_count);
             target.find('.directory-total-photo-count').text(dir.total_photo_count);
+        });
+    } else if(window.location.pathname.includes('/photos/broken') && output.broken_photo_ids) {
+        $('#broken-count').text(output.broken_photo_ids.length);
+        $('.broken-row').each(function() {
+            if(!output.broken_photo_ids.includes(parseInt($(this).attr('id'), 10))) {
+                $(this).remove();
+            }
         });
     }
 }

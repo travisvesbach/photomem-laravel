@@ -36,6 +36,10 @@ class Photo extends Model
         return $query->get()->random();
     }
 
+    public function scopeBroken($query) {
+        return $query->whereYear('date_taken', 1970);
+    }
+
     // if none found for today with orientation, return random with orientation
     public static function todayOrRandom($today = false, $orientation = null) {
         if($today) {
@@ -54,4 +58,5 @@ class Photo extends Model
             $path
         );
     }
+
 }

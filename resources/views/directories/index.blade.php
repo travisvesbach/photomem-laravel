@@ -5,11 +5,6 @@
 @endsection
 
 @section('content')
-    <div class="alert alert-syncing">
-        <div class="lds-dual-ring"></div>
-        <div class="alert-message">Syncing...please wait</div>
-    </div>
-
     <div class="row">
         <div class="synced-status">
             <div class="status-item" title="total directories">
@@ -39,7 +34,7 @@
         </div>
 
         <div class="actions">
-            <button class="button" title="syncs all directories (no photos)" onclick="runSync('{{ route('directories.syncDirectories') }}')">Sync Directories</button>
+            <button class="button" title="syncs all directories (no photos)" onclick="runSync('{{ route('sync.directories') }}')">Sync Directories</button>
         </div>
     </div>
 

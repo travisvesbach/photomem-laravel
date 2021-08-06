@@ -14,7 +14,7 @@
 
         <button
             class="button button-sync"
-            onclick="runSync('{{ route('directories.sync', ['directory' => $directory]) }}')"
+            onclick="runSync('{{ route('sync.directory', ['directory' => $directory]) }}')"
             title="syncs photos in this directory and non-ignored child directories">
                 {{ $directory->status == 'synced' || $directory->status == 'syncing' ? 'Resync' : 'Sync' }}
         </button>

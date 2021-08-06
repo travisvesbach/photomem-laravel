@@ -76,4 +76,12 @@ class PhotosController extends Controller
             'taken_on_date' => $taken_on_date
         ]);
     }
+
+    public function broken() {
+        $photos = Photo::broken()->get();
+
+        return view('photos.broken', [
+            'photos' => $photos
+        ]);
+    }
 }

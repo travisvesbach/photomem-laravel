@@ -25,6 +25,7 @@
                 <a href="/" class="nav-link">Home</a>
                 <a href="{{ route('directories') }}" class="nav-link">Directories</a>
                 <a href="{{ route('photos.search') }}" class="nav-link">Search</a>
+                <a href="{{ route('photos.broken') }}" class="nav-link">Broken</a>
                 <a href="{{ route('about') }}" class="nav-link">About</a>
             </div>
         </header>

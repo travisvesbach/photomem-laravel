@@ -25,11 +25,11 @@
                 @endfor
             </select>
 
-            <button class="button" onclick="searchDate()">Search</button>
+            <button class="button">Search</button>
         </form>
     </div>
 
-    <div class="results">
+    <div>
         @if($taken_on_date->count() > 0)
             <h2>{{ $taken_on_date->count() }} {{ $taken_on_date->count() != 1 ? 'Photos' : 'Photo' }} taken on {{ $date->format('F j') }}</h2>
             <table>
@@ -44,7 +44,7 @@
                     @foreach(App\Models\Directory::hasTakenOnDate($date)->get() as $dir)
                         <tr>
                             <td>{{ $dir->displayPath() }}</td>
-                                <td>{{ implode(', ', $dir->getYearsTakenOnDate($date)) }}</td>
+                            <td>{{ implode(', ', $dir->getYearsTakenOnDate($date)) }}</td>
                             <td>{{ $dir->getPhotosTakenOnDate($date)->count() }}</td>
                         </tr>
                     @endforeach
