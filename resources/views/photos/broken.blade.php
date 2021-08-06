@@ -23,7 +23,7 @@
                     <tr id="{{ $photo->id }}" class="broken-row">
                         <td>{{ $photo->path() }}</td>
                         <td>
-                            @if($photo->date_taken->year == 1970)
+                            @if($photo->date_taken->year <= 1970)
                                 unknown
                             @endif
                         </td>
