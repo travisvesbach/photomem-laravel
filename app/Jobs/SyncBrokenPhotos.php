@@ -37,7 +37,7 @@ class SyncBrokenPhotos implements ShouldQueue
         foreach($photos as $photo) {
             var_dump($photo->name);
 
-            if(File::exists($photo->path()) {
+            if(File::exists($photo->path())) {
                 $photo->date_taken = date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $photo->escapedPath())));
                 $photo->save();
             } else {
