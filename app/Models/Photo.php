@@ -18,12 +18,7 @@ class Photo extends Model
     }
 
     public function escapedPath() {
-        return str_replace(
-            [' ', '\'', '&'],
-            ['\ ', '\\\'', '\&'],
-            $this->directory->path . '/' . $this->name
-        );
-        // return self::escapePath($this->directory->path . '/' . $this->name);
+        return self::escapePath($this->directory->path . '/' . $this->name);
     }
 
     public function scopeTakenOnDate($query, $date = 'now') {
@@ -54,8 +49,8 @@ class Photo extends Model
 
     public static function escapePath($path) {
         return str_replace(
-            [' ', '\'', '&'],
-            ['\ ', '\\\'', '\&'],
+            [' ', '\'', '&', '(', ')'],
+            ['\ ', '\\\'', '\&', '\(', '\)'],
             $path
         );
     }
