@@ -27,3 +27,5 @@ Route::post('/directories/{directory}/sync', [DirectoriesController::class, 'syn
 Route::patch('/directories/{directory}/update', [DirectoriesController::class, 'update'])->name('directories.update');
 
 Route::get('/photos/random', [PhotosController::class, 'random'])->name('photos.random');
+
+Route::get('/photos/search', [PhotosController::class, 'search'])->name('photos.search');

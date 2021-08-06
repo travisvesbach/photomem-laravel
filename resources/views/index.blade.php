@@ -9,7 +9,7 @@
     @if(\Schema::hasTable('photos'))
         <?php
             $photos = \App\Models\Photo::all();
-            $photos_today = \App\Models\Photo::takenToday()->get();
+            $photos_today = \App\Models\Photo::takenOnDate()->get();
             $directories = \App\Models\Directory::orderBy('path')->get();
         ?>
         @if($photos->count() > 0)
@@ -56,7 +56,7 @@
             </div>
 
             @if($photos_today->count() > 0)
-                <h3>Images Taken Today</h3>
+                <h3>Photos Taken Today</h3>
 
                 <table>
                     <thead>
@@ -66,17 +66,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach(App\Models\Directory::hasTakenToday()->get() as $dir)
+                        @foreach(App\Models\Directory::hasTakenOnDate()->get() as $dir)
                             <tr>
                                 <td>{{ $dir->displayPath() }}</td>
-                                <td>{{ $dir->getPhotosTakenToday()->count() }}</td>
+                                <td>{{ $dir->getPhotosTakenOnDate()->count() }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             @endif
         @else
-            <p class="placeholder">There are no images synced yet. Visit <a href="{{ route('directories') }}">Directories</a> to sync directories.</p>
+            <p class="placeholder">There are no photos synced yet. Visit <a href="{{ route('directories') }}">Directories</a> to sync directories.</p>
         @endif
     @else
         <h2 style="color: red;">Migrations have not been run.</h2>

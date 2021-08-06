@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Photo;
 use File;
+use Carbon\Carbon;
 
 class PhotosController extends Controller
 {
@@ -59,5 +60,20 @@ class PhotosController extends Controller
             return response()->file($new_destination);
         }
         return response()->file($destination);
+    }
+
+    public function search(Request $request) {
+        if($request->month && $request->day) {
+            $date = Carbon::createFromFormat('F j', $request->month . ' ' . $request->day);
+            $taken_on_date = \App\Models\Photo::takenOnDate($date)->get();
+        } else {
+            $date = Carbon::now();
+            $taken_on_date = \App\Models\Photo::takenOnDate()->get();
+        }
+
+        return view('photos.search', [
+            'date' => $date,
+            'taken_on_date' => $taken_on_date
+        ]);
     }
 }

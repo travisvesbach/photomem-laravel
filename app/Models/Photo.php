@@ -26,8 +26,8 @@ class Photo extends Model
         // return self::escapePath($this->directory->path . '/' . $this->name);
     }
 
-    public function scopeTakenToday($query) {
-        return $query->whereRaw("strftime( '%m', photos.date_taken ) = strftime('%m','now', 'localtime') AND strftime( '%d', photos.date_taken ) = strftime('%d','now', 'localtime')");
+    public function scopeTakenOnDate($query, $date = 'now') {
+        return $query->whereRaw("strftime( '%m', photos.date_taken ) = strftime('%m','". $date ."', 'localtime') AND strftime( '%d', photos.date_taken ) = strftime('%d','". $date ."', 'localtime')");
     }
 
     public function scopeOrientation($query, $orientation = null) {
@@ -44,7 +44,7 @@ class Photo extends Model
     // if none found for today with orientation, return random with orientation
     public static function todayOrRandom($today = false, $orientation = null) {
         if($today) {
-            $photos = self::takenToday()->orientation($orientation)->get();
+            $photos = self::takenOnDate()->orientation($orientation)->get();
             if($photos->count() > 0) {
                 return $photos->random();
             }

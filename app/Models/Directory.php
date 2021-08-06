@@ -50,8 +50,8 @@ class Directory extends Model
         return $this->hasMany(Photo::class);
     }
 
-    public function getPhotosTakenToday() {
-        return $this->photos()->takenToday()->get();
+    public function getPhotosTakenOnDate($date = 'now') {
+        return $this->photos()->takenOnDate($date)->get();
     }
 
     public function setPhotoCounts() {
@@ -187,10 +187,10 @@ class Directory extends Model
         }
     }
 
-    // get all directories that have photos taken today in history
-    public function scopeHasTakenToday($query) {
-        return $query->whereHas('photos', function($query) {
-            $query->takenToday();
+    // get all directories that have photos taken on the passed date in history (today if date is null)
+    public function scopeHasTakenOnDate($query, $date = 'now') {
+        return $query->whereHas('photos', function($query) use($date) {
+            $query->takenOnDate($date);
         });
     }
 }
