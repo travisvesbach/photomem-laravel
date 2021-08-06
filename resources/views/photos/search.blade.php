@@ -31,11 +31,12 @@
 
     <div class="results">
         @if($taken_on_date->count() > 0)
-            <h3>{{ $taken_on_date->count() }} {{ $taken_on_date->count() != 1 ? 'Photos' : 'Photo' }} taken on {{ $date->format('F d') }}</h3>
+            <h2>{{ $taken_on_date->count() }} {{ $taken_on_date->count() != 1 ? 'Photos' : 'Photo' }} taken on {{ $date->format('F j') }}</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Path</th>
+                        <th>Years</th>
                         <th>Count</th>
                     </tr>
                 </thead>
@@ -43,13 +44,14 @@
                     @foreach(App\Models\Directory::hasTakenOnDate($date)->get() as $dir)
                         <tr>
                             <td>{{ $dir->displayPath() }}</td>
+                                <td>{{ implode(', ', $dir->getYearsTakenOnDate($date)) }}</td>
                             <td>{{ $dir->getPhotosTakenOnDate($date)->count() }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         @else
-            <h3>No photos taken on {{ $date->format('F d') }}</h3>
+            <h2>No photos taken on {{ $date->format('F j') }}</h2>
         @endif
     </div>
 @endsection

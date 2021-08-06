@@ -54,6 +54,16 @@ class Directory extends Model
         return $this->photos()->takenOnDate($date)->get();
     }
 
+    public function getYearsTakenOnDate($date = 'now') {
+        $years = [];
+        foreach($this->photos()->takenOnDate($date)->pluck('date_taken') as $date) {
+            array_push($years, $date->format('Y'));
+        }
+        $years = array_unique($years);
+        sort($years);
+        return $years;
+    }
+
     public function setPhotoCounts() {
         $this->photo_count = $this->photos->count();
         $count = $this->photo_count;

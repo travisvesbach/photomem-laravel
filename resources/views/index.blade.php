@@ -62,6 +62,7 @@
                     <thead>
                         <tr>
                             <th>Path</th>
+                            <th>Years</th>
                             <th>Count</th>
                         </tr>
                     </thead>
@@ -69,6 +70,7 @@
                         @foreach(App\Models\Directory::hasTakenOnDate()->get() as $dir)
                             <tr>
                                 <td>{{ $dir->displayPath() }}</td>
+                                <td>{{ implode(', ', $dir->getYearsTakenOnDate()) }}</td>
                                 <td>{{ $dir->getPhotosTakenOnDate()->count() }}</td>
                             </tr>
                         @endforeach
