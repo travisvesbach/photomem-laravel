@@ -37,7 +37,7 @@ class Photo extends Model
     }
 
     public function scopeBroken($query) {
-        return $query->whereYear('date_taken', '<=', 1990);
+        return $query->whereYear('date_taken', '<', 1990);
     }
 
     // if none found for today with orientation, return random with orientation

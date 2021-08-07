@@ -40,6 +40,9 @@ class SyncBrokenPhotos implements ShouldQueue
 
             if(File::exists($photo->path())) {
                 $photo->date_taken = date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $photo->escapedPath())));
+                if($photo->date_taken->format('Y') < 1990) {
+                    $photo->date_taken = date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[create-date]' " . $photo->escapedPath())));
+                }
                 $photo->save();
             } else {
                 $directory = $photo->directory;
