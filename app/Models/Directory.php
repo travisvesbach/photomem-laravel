@@ -127,10 +127,16 @@ class Directory extends Model
                     }
                 }
 
+                $date_taken = date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $escaped_path)));
+                if(!$date_taken) {
+                    $date_taken = ate('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[create-date]' " . $escaped_path)));
+                }
+
+
 
                 $photo = [
                     'name' => $name,
-                    'date_taken' => date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $escaped_path))),
+                    'date_taken' => $date_taken,
                     'directory_id' => $this->id,
                     'orientation' => $orientation
                 ];
