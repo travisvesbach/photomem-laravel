@@ -128,7 +128,7 @@ class Directory extends Model
                 }
 
                 $date_taken = date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[EXIF:DateTimeOriginal]' " . $escaped_path)));
-                if($date_taken->format('Y') < 1990) {
+                if(substr($date_taken, 0, 4) < 1990) {
                     $date_taken = date('Y-m-d H:i:s', strtotime(shell_exec("identify -format '%[create-date]' " . $escaped_path)));
                 }
 
