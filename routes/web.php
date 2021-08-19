@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\DirectoriesController;
 use App\Http\Controllers\PhotosController;
 use App\Http\Controllers\SyncController;
@@ -18,14 +19,13 @@ use App\Models\Photo;
 |
 */
 
-Route::view('/', 'index');
-Route::view('/about', 'about')->name('about');
+Route::get('/', [PageController::class, 'index'])->name('home');
+Route::get('/about', [PageController::class, 'about'])->name('about');
 
 Route::get('/directories', [DirectoriesController::class, 'index'])->name('directories');
 Route::patch('/directories/{directory}/update', [DirectoriesController::class, 'update'])->name('directories.update');
 
 Route::get('/photos/random', [PhotosController::class, 'random'])->name('photos.random');
-
 Route::get('/photos/search', [PhotosController::class, 'search'])->name('photos.search');
 Route::get('/photos/broken', [PhotosController::class, 'broken'])->name('photos.broken');
 

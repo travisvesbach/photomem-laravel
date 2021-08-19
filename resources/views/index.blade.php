@@ -6,12 +6,7 @@
 
 @section('content')
 
-    @if(\Schema::hasTable('photos'))
-        <?php
-            $photos = \App\Models\Photo::all();
-            $photos_today = \App\Models\Photo::takenOnDate()->get();
-            $directories = \App\Models\Directory::orderBy('path')->get();
-        ?>
+    @if($migrated)
         @if($photos->count() > 0)
             <div class="home-status">
                 <div class="status-item">
@@ -67,7 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach(App\Models\Directory::hasTakenOnDate()->get() as $dir)
+                        @foreach($directories_today as $dir)
                             <tr>
                                 <td>{{ $dir->displayPath() }}</td>
                                 <td>{{ implode(', ', $dir->getYearsTakenOnDate()) }}</td>
