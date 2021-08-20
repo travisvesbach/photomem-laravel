@@ -35,11 +35,12 @@ function syncStatus() {
         url: '/sync/status',
         datatype: "json",
         success: function(data) {
+            $('.alert-warning').css('display', 'none');
             output = jQuery.parseJSON(data);
             updateDisplay(output);
             if(output.status && output.status == 'syncing') {
                 if(output.current) {
-                    $('.alert-message').text('Syncing ' + output.current);
+                    $('.alert-syncing .alert-message').text('Syncing ' + output.current);
                 }
                 disableButtons();
                 setTimeout(function(){
@@ -51,7 +52,10 @@ function syncStatus() {
         },
         error: function(data) {
             enableButtons();
-            alert("Could not get sync status");
+            $('.alert-syncing').css('display', 'none');
+            $('.alert-warning').css('display', 'flex');
+            $('.alert-warning').text('Could not get sync status');
+
         },
     });
 }
@@ -59,19 +63,18 @@ function syncStatus() {
 function disableButtons() {
     $('button:not(.accordion-control)').prop('disabled', true);
     $('.alert-syncing').css('display', 'flex');
-    // $('body').css('cursor', 'wait');
 }
 
 function enableButtons() {
     $('.alert-syncing').css('display', 'none');
     $('.alert-message').text('Syncing...please wait');
     $('button').prop('disabled', false);
-    // $('body').css('cursor', 'inherit');
 }
 
 function updateDisplay(output) {
     if (window.location.pathname.includes('/directories') && output.current != 'Broken Photos') {
         if($('.directory-row').length != output.directories.length) {
+            $('.alert-syncing').css('display', 'none');
             alert("Number of directories has changed" + "\n\nClick 'OK' to refresh the page");
             location.reload();
         }

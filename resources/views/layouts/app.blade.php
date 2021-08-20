@@ -39,6 +39,8 @@
                 <div class="lds-dual-ring"></div>
                 <div class="alert-message">Syncing...please wait</div>
             </div>
+            <div class="alert alert-warning">
+            </div>
 
             @yield('content')
         </div>

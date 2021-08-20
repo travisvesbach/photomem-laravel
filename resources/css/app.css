@@ -177,10 +177,16 @@ code {
     font-weight: bold;
     display: none;
     z-index: 1;
+    height: 2.5rem;
 }
 
 .alert-normal {
     background: #065f46;
+}
+
+.alert-warning {
+    background: #b91c1c;
+    padding: 0 1rem;
 }
 
 .alert-syncing {
