@@ -33,7 +33,8 @@ RUN apt-get update \
         python3-pip \
         libjpeg-dev \
         zlib1g-dev \
-    && python3 -m pip install pillow
+        pipx \
+    && pipx install pillow
 
 # Add the user UID:1000, GID:1000, home at /app
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
