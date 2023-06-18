@@ -22,7 +22,13 @@ class Photo extends Model
     }
 
     public function scopeTakenOnDate($query, $date = 'now') {
-        return $query->whereRaw("strftime( '%m', photos.date_taken ) = strftime('%m','". $date ."', 'localtime') AND strftime( '%d', photos.date_taken ) = strftime('%d','". $date ."', 'localtime')");
+        // DATE_FORMAT for and strftime for sqlite
+        if(env('DB_CONNECTION') == 'mysql') {
+            $date = $date == 'now' ? 'NOW()' : "'".$date."'";
+            return $query->whereRaw("DATE_FORMAT(photos.date_taken, '%m-%d') = DATE_FORMAT(". $date .", '%m-%d')");
+        } elseif(env('DB_CONNECTION') == 'sqlite') {
+            return $query->whereRaw("strftime( '%m', photos.date_taken ) = strftime('%m','". $date ."', 'localtime') AND strftime( '%d', photos.date_taken ) = strftime('%d','". $date ."', 'localtime')");
+        }
     }
 
     public function scopeOrientation($query, $orientation = null) {
