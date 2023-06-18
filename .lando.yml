@@ -3,8 +3,10 @@ recipe: laravel
 config:
   webroot: public/
 services:
+  appserver:
+    type: php:8.1
   node:
-    type: node:12
+    type: node
     build:
       - npm install
     run_as_root:
