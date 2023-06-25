@@ -10,6 +10,7 @@ services:
       - photomem
     ports:
       - "1212:80"
+      - "1213:443"
     # the first is for code, the second is to set container time to server/machine time, third is source of images
     volumes:
       - ./:/var/www/html
@@ -36,21 +37,23 @@ services:
     networks:
       - photomem
     volumes:
-      - ./:/var/www/html/
+      - ./:/var/www/html
       - "/etc/localtime:/etc/localtime:ro"
       # ADD picture source (:ro = readonly): /path/to/source:/var/www/html/storage/sync:ro
 
- # db:
- #   image: mariadb
- #   container_name: photomem-mariadb
- #   restart: always
- #   environment:
- #     MYSQL_DATABASE: laravel
- #     MYSQL_ALLOW_EMPTY_PASSWORD: 1
- #   volumes:
- #     - ./data:/var/lib/mysql
- #   ports:
- #     - 33061:3306
+  # mariadb:
+  #   image: mariadb
+  #   container_name: photomem-db
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+  #     MYSQL_DATABASE: "${DB_DATABASE}"
+  #     MYSQL_USER: "${DB_USERNAME}"
+  #     MYSQL_PASSWORD: "${DB_PASSWORD}"
+  #   networks:
+  #     - photomem
+  #   ports:
+  #     - "3306:3306"
+  #   restart: on-failure
 
 networks:
   photomem:
