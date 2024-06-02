@@ -12,6 +12,7 @@ RUN apt-get update \
         git \
         mariadb-client \
     && docker-php-ext-install \
+        pdo \
         pdo_mysql \
         gd \
         zip \
