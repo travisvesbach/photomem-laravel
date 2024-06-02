@@ -32,8 +32,9 @@ class Photo extends Model
     }
 
     public function scopeOrientation($query, $orientation = null) {
-        if($orientation) {
-            return $query->where('orientation', $orientation);
+        $orientation_query = $query->where('orientation', $orientation);
+        if($orientation && $orientation_query->count() > 0) {
+            return $orientation_query;
         }
         return $query;
     }
