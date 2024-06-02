@@ -35,7 +35,7 @@ class Photo extends Model
         $base_query = clone $query;
         $query->where('orientation', $orientation);
         if($orientation && $query->first()) {
-            return $orientation_query;
+            return $query;
         }
         return $base_query;
     }
